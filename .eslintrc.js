@@ -15,7 +15,7 @@ module.exports = {
     'vue/max-attributes-per-line': [
       2,
       {
-        'singleline': 5,
+        'singleline': 10,
         'multiline': {
           'max': 1,
           'allowFirstLine': false
@@ -56,7 +56,8 @@ module.exports = {
       }
     ],
     'template-curly-spacing': 'off',
-    'indent': 'off'
+    'indent': 'off',
+	'vue/html-indent': 'tab',
   },
   parserOptions: {
     parser: 'babel-eslint'
