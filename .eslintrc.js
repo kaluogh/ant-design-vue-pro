@@ -58,6 +58,16 @@ module.exports = {
     'template-curly-spacing': 'off',
     'indent': 'off',
 	'vue/html-indent': 'tab',
+	'comma-dangle': 0,
+	'space-before-function-paren': 0,
+	'no-undef': 0,
+	'spaced-comment': 0,
+	'no-useless-return': 0,
+	'prefer-const': 0,
+	'semi': 0,
+	'eqeqeq': 0,
+	'quotes': 0,
+	'eol-last': 0,
   },
   parserOptions: {
     parser: 'babel-eslint'
