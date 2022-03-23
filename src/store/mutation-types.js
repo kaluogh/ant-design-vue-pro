@@ -22,3 +22,11 @@ export const NAV_THEME = {
   LIGHT: 'light',
   DARK: 'dark'
 }
+
+// custom types
+export const UI_CACHE_DB_DICT_DATA = 'UI_CACHE_DB_DICT_DATA'
+export const SYS_BUTTON_AUTH = 'SYS_BUTTON_AUTH'
+export const USER_NAME = 'Login_Username'
+export const USER_INFO = 'Login_Userinfo'
+export const USER_AUTH = 'LOGIN_USER_BUTTON_AUTH'
+export const TENANT_ID = 'TENANT_ID'
