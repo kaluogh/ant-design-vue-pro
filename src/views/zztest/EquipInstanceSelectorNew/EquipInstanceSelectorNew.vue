@@ -23,7 +23,7 @@
 				</template>
 				<template slot="instanceInfo" slot-scope="instanceInfo">
 					<div>
-						<div style="text-align: left;min-height: 1.8rem;">
+						<div :class="['tag-row', isReadonly ? 'align-center' : 'align-left']">
 							<a-tag
 								class="info-tag"
 								:closable="!isReadonly"
@@ -34,7 +34,7 @@
 									{{ item.label }}
 							</a-tag>
 						</div>
-						<div style="text-align: right;">
+						<div v-show="!isReadonly" class="align-right">
 							<a-tag
 								class="info-tag"
 								color="#2db7f5"
@@ -54,7 +54,7 @@
 									全部取消
 							</a-tag>
 						</div>
-						<div v-show="instanceInfo.selectorVisible">
+						<div v-show="!isReadonly && instanceInfo.selectorVisible">
 							<a-select
 								v-model="instanceInfo.selectedLabelArray"
 								showArrow
@@ -76,10 +76,19 @@
 				</template>
 				<template slot="unitInfo" slot-scope="unitInfo">
 					<div>
-						<div style="text-align: left;min-height: 1.8rem;">
+						<div v-show="isReadonly" class="tag-row align-center">
+							<a-tag
+								v-for="(item, index) in unitInfo.items.filter(item => item.isSelected)"
+								:key="index"
+								color="purple"
+								>
+									{{ item.label }}车
+							</a-tag>
+						</div>
+						<div v-show="!isReadonly" class="tag-row align-left">
 							<a-checkable-tag
 								class="info-tag"
-								:color="(!isReadonly && !item.isSelected)? 'purple' : '#cccccc'"
+								:color="item.isSelected ? 'purple' : '#cccccc'"
 								v-for="(item, index) in unitInfo.items"
 								:key="item.label + '_' + index"
 								v-model="item.isSelected"
@@ -87,8 +96,7 @@
 									{{ item.label }}车
 							</a-checkable-tag>
 						</div>
-					</div>
-					<div style="text-align: right;">
+						<div v-show="!isReadonly" class="align-right">
 							<a-tag
 								class="info-tag"
 								color="#87d068"
@@ -102,6 +110,7 @@
 									全部取消
 							</a-tag>
 						</div>
+					</div>
 				</template>
 
 			</a-table>
@@ -116,7 +125,7 @@ export default {
 		value: Array,
 		readonly: {
 			type: Boolean,
-			default: true,
+			default: false,
 		},
 		equipModels: {
 			type: Array,
@@ -132,6 +141,7 @@ export default {
 		}
 	},
 	created() {
+		this.isReadonly = this.$props.readonly
 		this.initTableColumns()
 	},	
 	mounted() {
@@ -417,6 +427,9 @@ export default {
 		// 	unitInfo.items[index].isSelected = false
 		// },
 		handleSelectedUnitItem(unitInfo, flag) {
+			if (this.isReadonly) {
+				return
+			}
 			if (flag) {
 				unitInfo.isSelectedAll = unitInfo.items.every(item => item.isSelected)
 			} else {
@@ -461,6 +474,18 @@ export default {
 
 </style>
 <style lang="less" scoped>
+.tag-row{
+	min-height: 1.8rem;
+}
+.align-left{
+	text-align: left;
+}
+.align-center{
+	text-align: center;
+}
+.align-right{
+	text-align: right;
+}
 .info-tag{
 	margin-top: .2rem;
 	margin-bottom: .2rem;
