@@ -21,15 +21,28 @@
 			<div>
 				{{ JSON.stringify(testModel)}}
 			</div>
+
+			<div>
+				<a-button type="primary" @click="handleSearchPointByCode">
+					searchPointByCode
+				</a-button>
+			</div>
+
 		</a-card>
+
+		<search-point-by-code ref="searchPointByCode"/>
 	</div>
 </template>
 
 <script>
 import EquipInstanceSelectorNew from './EquipInstanceSelectorNew/EquipInstanceSelectorNew.vue'
+import SearchPointByCode from './SearchPointByCode'
 
 export default {
-    components: { EquipInstanceSelectorNew },
+    components: {
+		EquipInstanceSelectorNew,
+		SearchPointByCode,
+	},
 	name: 'BKPTest',
 	data() {
 		return {
@@ -63,7 +76,10 @@ export default {
 		},
 		handleTest2() {
 			this.equipModels = [1,2,3]
-		}
+		},
+		handleSearchPointByCode() {
+            this.$refs.searchPointByCode.showModal()
+        },
 	}
 }
 </script>
