@@ -1,12 +1,12 @@
 <template>
-    <a-modal :title="title" :width="1000" :visible="visible" :confirmLoading="confirmLoading" switchFullscreen @ok="handleOK" @cancel="handleCancel" cancelText="关闭">
-        <a-row>
+    <a-modal :title="title" width="85%" :visible="visible" :confirmLoading="confirmLoading" switchFullscreen @ok="handleOK" @cancel="handleCancel" cancelText="关闭">
+        <a-row :gutter="16">
             <a-col :span="6">
                 <div>
                     <div>
                         <a-input-search style="margin-bottom: 8px" placeholder="Search" allowClear @search="handleTreeSearch" />
                     </div>
-                    <div style="height: 400px">
+                    <div style="height: 35rem">
                         <a-tree
                             v-model="treeSelecedNodeKeys"
                             :tree-data="currentTreeData"
@@ -19,8 +19,31 @@
                 </div>
             </a-col>
             <a-col :span="18">
-
+				<div>
+					<a-input-search
+					  placeholder=""
+					  onSearch=''
+					  enterButton
+					  allowClear
+					  @search="handleTableSearch"
+					/>
+				</div>
+				<div style="margin-top: 1rem;">
+					<a-table size="middle" :columns="columns" rowKey="key" :data-source="currentTableData" bordered>
+						<template slot="action" slot-scope="text,record">
+							<a href="" @click.prevent="handleSelectedPoint(record)">添加</a>
+						</template>
+					</a-table>
+				</div>
             </a-col>
+			<a-col :span="24">
+				<div class="selected-points-container">
+					<a-tag v-for="(item, index) in selectedPointList" closable :key="item.key"  color="blue"
+						@close="handleAfterClose(index)">
+						{{ item.title }}
+					</a-tag>
+				</div>
+			</a-col>
         </a-row>
     </a-modal>
 </template>
@@ -46,13 +69,18 @@ export default {
             treeSelecedNodeKeys: [],
             treeSelecedNodes: [],
             tableData: [],
+			currentTableData: [],
             tablePager: {
                 current: 0,
                 totalCount: 0,
             },
-            selectedList: [],
+			columns: [],
+            selectedPointList: [],
         }
     },
+	created() {
+		this.initColumns()
+	},
     mounted(){
         this.getTotalData().then(res => { 
 			this.formatTotalData(res)
@@ -60,6 +88,31 @@ export default {
 		})
     },
     methods: {
+		initColumns() {
+			this.columns = [
+				{
+					title: 'Index',
+					customRender: (text, record, index) => {
+						return index + 1
+					}
+				},
+				{
+					title: 'Title',
+					dataIndex: 'title',
+					width: '40%',
+				},
+				{
+					title: 'Key',
+					dataIndex: 'key',
+					width: '40%',
+				},
+				{
+					title: 'Action',
+					width: '15%',
+					scopedSlots: { customRender: 'action' }
+				}
+			]
+		},
         showModal() {
             this.visible = true
         },
@@ -108,7 +161,6 @@ export default {
 						}
 					}
 
-					debugger
 					let filteredData = removeNotHit(data)
 
 					this.currentTreeData = filteredData
@@ -152,7 +204,6 @@ export default {
         //     }
         // },
 		handleTreeSelected(keyArray) {
-			debugger
 			if(keyArray && keyArray.length > 0) {
 				const searchKey = keyArray[0]
 				this.isLoading = true
@@ -177,6 +228,7 @@ export default {
 					resolve(result)
 				}).then((data) => {
 					this.tableData = data
+					this.currentTableData = data
 					this.tablePager.current = 0
 					this.tablePager.totalCount = 0
 				}).finally(() => {
@@ -196,6 +248,8 @@ export default {
         },
         handleOK() {
             console.log('handleOK')
+			console.log(this.selectedPointList)
+			alert(this.selectedPointList.length)
         },
         handleCancel() {
             this.visible = false
@@ -393,10 +447,35 @@ export default {
 			this.treeData = data
 			this.currentTreeData = _.cloneDeep(data)
 		},
+		handleSelectedPoint(record) {
+			const data = _.cloneDeep(record)
+			const findItem = this.selectedPointList.find(item => item.key === data.key)
+			if (findItem) {
+				this.$message.warning('当前点已经选择了.')
+			} else {
+				this.selectedPointList.push(data)
+			}
+		},
+		handleAfterClose(index) {
+			this.selectedPointList.splice(index, 1)
+		},
+		handleTableSearch(value) {
+			debugger
+			if (value) {
+				this.currentTableData = this.tableData.filter(item => item.title.includes(value))
+			} else {
+				this.currentTableData = this.tableData
+			}
+		}
     }
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.selected-points-container{
+	min-height: 5rem;
+	border: 1px solid lightgrey;
+	border-radius: .25rem;
+	padding: .5rem;
+}
 </style>
