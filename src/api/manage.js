@@ -13,7 +13,7 @@ export default api
 
 // post
 export function postAction(url, parameter) {
-    return axios({
+    return request({
         url: url,
         method: 'post',
         data: parameter,
@@ -22,7 +22,7 @@ export function postAction(url, parameter) {
 
 // post method= {post | put}
 export function httpAction(url, parameter, method) {
-    return axios({
+    return request({
         url: url,
         method: method,
         data: parameter
@@ -31,7 +31,7 @@ export function httpAction(url, parameter, method) {
 
 //put
 export function putAction(url, parameter) {
-    return axios({
+    return request({
         url: url,
         method: 'put',
         data: parameter
@@ -40,7 +40,7 @@ export function putAction(url, parameter) {
 
 //get
 export function getAction(url, parameter) {
-    return axios({
+    return request({
         url: url,
         method: 'get',
         params: parameter
@@ -49,7 +49,7 @@ export function getAction(url, parameter) {
 
 //deleteAction
 export function deleteAction(url, parameter) {
-    return axios({
+    return request({
         url: url,
         method: 'delete',
         params: parameter
@@ -121,7 +121,7 @@ export function saveSub(sub) {
  * @returns {*}
  */
 export function downFile(url, parameter) {
-    return axios({
+    return request({
         url: url,
         params: parameter,
         method: 'get',
