@@ -1,5 +1,9 @@
-import { asyncRouterMap, constantRouterMap } from '@/config/router.config'
+import {
+    asyncRouterMap,
+    constantRouterMap
+} from '@/config/router.config'
 import cloneDeep from 'lodash.clonedeep'
+import { GetUserPermission } from '@/api/permission'
 
 /**
  * 过滤账户是否拥有某一个权限，并将菜单从加载列表移除
@@ -8,18 +12,18 @@ import cloneDeep from 'lodash.clonedeep'
  * @param route
  * @returns {boolean}
  */
-function hasPermission (permission, route) {
-  if (route.meta && route.meta.permission) {
-    let flag = false
-    for (let i = 0, len = permission.length; i < len; i++) {
-      flag = route.meta.permission.includes(permission[i])
-      if (flag) {
-        return true
-      }
+function hasPermission(permission, route) {
+    if (route.meta && route.meta.permission) {
+        let flag = false
+        for (let i = 0, len = permission.length; i < len; i++) {
+            flag = route.meta.permission.includes(permission[i])
+            if (flag) {
+                return true
+            }
+        }
+        return false
     }
-    return false
-  }
-  return true
+    return true
 }
 
 /**
@@ -31,48 +35,79 @@ function hasPermission (permission, route) {
  */
 // eslint-disable-next-line
 function hasRole(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return route.meta.roles.includes(roles.id)
-  } else {
-    return true
-  }
+    if (route.meta && route.meta.roles) {
+        return route.meta.roles.includes(roles.id)
+    } else {
+        return true
+    }
 }
 
-function filterAsyncRouter (routerMap, roles) {
-  const accessedRouters = routerMap.filter(route => {
-    if (hasPermission(roles.permissionList, route)) {
-      if (route.children && route.children.length) {
-        route.children = filterAsyncRouter(route.children, roles)
-      }
-      return true
-    }
-    return false
-  })
-  return accessedRouters
+function filterAsyncRouter(routerMap, roles) {
+    const accessedRouters = routerMap.filter(route => {
+        if (hasPermission(roles.permissionList, route)) {
+            if (route.children && route.children.length) {
+                route.children = filterAsyncRouter(route.children, roles)
+            }
+            return true
+        }
+        return false
+    })
+    return accessedRouters
 }
 
 const permission = {
-  state: {
-    routers: constantRouterMap,
-    addRouters: []
-  },
-  mutations: {
-    SET_ROUTERS: (state, routers) => {
-      state.addRouters = routers
-      state.routers = constantRouterMap.concat(routers)
+    state: {
+        routers: constantRouterMap,
+        addRouters: [],
+		allAuth: [],
+		auth: [],
+		menu: [],
+		userPermission: [],
+    },
+    mutations: {
+        SET_ROUTERS: (state, routers) => {
+            state.addRouters = routers
+            state.routers = constantRouterMap.concat(routers)
+        },
+		SET_USERPERMISSION: (state, data) => {
+			const { auth, allAuth, menu} = data
+			state.auth = auth
+			state.allAuth = allAuth
+			state.menu = menu
+		},
+    },
+    actions: {
+        GenerateRoutes({ commit }, data) {
+            return new Promise(resolve => {
+                const {
+                    roles
+                } = data
+                const routerMap = cloneDeep(asyncRouterMap)
+                const accessedRouters = filterAsyncRouter(routerMap, roles)
+                commit('SET_ROUTERS', accessedRouters)
+                resolve()
+            })
+        },
+		GetUserPermissionInfo({ commit }) {
+			return new Promise((resolve, reject) => {
+				debugger
+				GetUserPermission().then((res) => {
+					if (res && res.success) {
+						commit('SET_USERPERMISSION', res.result)
+						// to do 
+						const routerMap = cloneDeep(asyncRouterMap)
+						commit('SET_ROUTERS', routerMap)
+						resolve()
+					} else {
+						reject()
+					}
+				}).catch(() => {
+					reject()
+				})
+			})
+			
+		}
     }
-  },
-  actions: {
-    GenerateRoutes ({ commit }, data) {
-      return new Promise(resolve => {
-        const { roles } = data
-        const routerMap = cloneDeep(asyncRouterMap)
-        const accessedRouters = filterAsyncRouter(routerMap, roles)
-        commit('SET_ROUTERS', accessedRouters)
-        resolve()
-      })
-    }
-  }
 }
 
 export default permission
