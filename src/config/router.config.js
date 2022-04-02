@@ -392,6 +392,77 @@ export const asyncRouterMap = [{
                 ]
             },
 
+			// 
+			{
+				path: '/isystem',
+				name: 'isystem',
+				component: RouteView,
+				redirect: 'isystem/user',
+				meta: {
+					title: '账户管理',
+					icon: 'user',
+					keepAlive: false,
+				},
+				children: [
+					{
+						path: '/isystem/user',
+						name: 'isystem-user',
+						component: () => import('@/views/isystem/UserList'),
+						meta: {
+							title: '用户管理'
+						}
+					},
+					{
+						path: '/isystem/roleUserList',
+						name: 'isystem-roleUserList',
+						component: () => import('@/views/isystem/RoleUserList'),
+						meta: {
+							title: '角色管理'
+						}
+					},
+					{
+						path: '/isystem/permission',
+						name: 'isystem-permission',
+						component: () => import('@/views/isystem/PermissionList'),
+						meta: {
+							title: '菜单管理'
+						}
+					},
+					{
+						path: '/isystem/depart',
+						name: 'isystem-depart',
+						component: () => import('@/views/isystem/DepartList'),
+						meta: {
+							title: '部门管理'
+						}
+					},
+					{
+						path: '/isystem/position',
+						name: 'isystem-position',
+						component: () => import('@/views/isystem/PositionList'),
+						meta: {
+							title: '职务管理'
+						}
+					},
+					{
+						path: '/isystem/departUserList',
+						name: 'isystem-departUserList',
+						component: () => import('@/views/isystem/MyDepart'),
+						meta: {
+							title: '我的部门'
+						}
+					},
+					{
+						path: '/isystem/addressList',
+						name: 'isystem-addressList',
+						component: () => import('@/views/isystem/AddressList'),
+						meta: {
+							title: '通讯录'
+						}
+					},
+				]
+			},
+
             // zztest
             {
                 path: '/zztest',

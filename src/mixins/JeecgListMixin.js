@@ -7,7 +7,8 @@
 import { filterObj } from '@/utils/util';
 import { deleteAction, getAction,downFile,getFileAccessHttpUrl } from '@/api/manage'
 import Vue from 'vue'
-import { ACCESS_TOKEN, TENANT_ID } from "@/store/mutation-types"
+// import { ACCESS_TOKEN, TENANT_ID } from "@/store/mutation-types"
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 import store from '@/store'
 import {Modal} from 'ant-design-vue'
 
@@ -64,12 +65,16 @@ export const JeecgListMixin = {
   computed: {
     //token header
     tokenHeader(){
-      let head = {'X-Access-Token': Vue.ls.get(ACCESS_TOKEN)}
-      let tenantid = Vue.ls.get(TENANT_ID)
-      if(tenantid){
-        head['tenant-id'] = tenantid
-      }
-      return head;
+    //   let head = {'X-Access-Token': Vue.ls.get(ACCESS_TOKEN)}
+    //   let tenantid = Vue.ls.get(TENANT_ID)
+    //   if(tenantid){
+    //     head['tenant-id'] = tenantid
+    //   }
+    //   return head;
+	
+		return {
+			'X-Access-Token': localStorage.getItem(ACCESS_TOKEN)
+		}
     }
   },
   methods:{
@@ -265,7 +270,7 @@ export const JeecgListMixin = {
     /* 导出 */
     handleExportXls2(){
       let paramsStr = encodeURI(JSON.stringify(this.getQueryParams()));
-      let url = `${window._CONFIG['domianURL']}/${this.url.exportXlsUrl}?paramsStr=${paramsStr}`;
+      let url = `${process.env.VUE_APP_API_BASE_URL}/${this.url.exportXlsUrl}?paramsStr=${paramsStr}`;
       window.location.href = url;
     },
     /**导出文件*/
@@ -312,7 +317,7 @@ export const JeecgListMixin = {
           // this.$message.success(`${info.file.name} 文件上传成功`);
           if (info.file.response.code === 201) {
             let { message, result: { msg, fileUrl, fileName } } = info.file.response
-            let href = window._CONFIG['domianURL'] + fileUrl
+            let href = process.env.VUE_APP_API_BASE_URL + fileUrl
             this.$warning({
               title: message,
               content: (<div>

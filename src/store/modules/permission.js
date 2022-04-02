@@ -90,7 +90,6 @@ const permission = {
         },
 		GetUserPermissionInfo({ commit }) {
 			return new Promise((resolve, reject) => {
-				debugger
 				GetUserPermission().then((res) => {
 					if (res && res.success) {
 						commit('SET_USERPERMISSION', res.result)
