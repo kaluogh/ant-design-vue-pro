@@ -57,11 +57,13 @@
 <script>
   import {queryTreeListForRole,queryRolePermission,saveRolePermission} from '@/api/api'
   import RoleDataruleModal from './RoleDataruleModal.vue'
+  import {Tree as ATree} from 'ant-design-vue'
 
   export default {
     name: "RoleModal",
     components:{
-      RoleDataruleModal
+      RoleDataruleModal,
+	  ATree,
     },
     data(){
       return {
