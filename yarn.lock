@@ -12063,3 +12063,8 @@ yorkie@^2.0.0:
     is-ci "^1.0.10"
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
+
+zbokepeinpmtest@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/zbokepeinpmtest/-/zbokepeinpmtest-1.0.4.tgz#04be4d6f7d70b40c58df7fb40ac2c409bfb00b66"
+  integrity sha512-T59rPZ3H6W3j818euYAMahNwB0jj5AlRSA4J3YrPiG7xzrGCeUenkucHYm2U5x1r1Ce1k0zm/xrxr1BdfG88/w==

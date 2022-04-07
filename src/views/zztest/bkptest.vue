@@ -37,6 +37,8 @@
 <script>
 import EquipInstanceSelectorNew from './EquipInstanceSelectorNew/EquipInstanceSelectorNew.vue'
 import SearchPointByCode from './SearchPointByCode'
+import helloWorld from 'zbokepeinpmtest'
+import moment from 'moment'
 
 export default {
     components: {
@@ -57,7 +59,8 @@ export default {
 		}
 	},
 	created() {
-
+		console.log(moment().format('MMMM Do YYYY, h:mm:ss a'))
+		helloWorld()
 	},
 	methods: {
 		handleTest() {
