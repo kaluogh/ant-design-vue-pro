@@ -21,16 +21,16 @@
 						{{ modelInfo.modelName }}
 					</div>
 				</template>
-				<template slot="instanceInfo" slot-scope="instanceInfo">
+				<template slot="instanceInfo" slot-scope="instanceInfo, record">
 					<div>
 						<div :class="['tag-row', isReadonly ? 'align-center' : 'align-left']">
 							<a-tag
 								class="info-tag"
 								:closable="!isReadonly"
 								color="blue"
-								v-for="(item, index) in instanceInfo.items.filter(item => item.isSelected)"
-								:key="item.label + '_' + index"
-								@close="handleUnSelectInstanceItem(instanceInfo, index)">
+								v-for="item in instanceInfo.items.filter(item => item.isSelected)"
+								:key="'group_name_' + item.label"
+								@close="handleUnSelectInstanceItem(instanceInfo, item.label)">
 									{{ item.label }}
 							</a-tag>
 						</div>
@@ -38,7 +38,7 @@
 							<a-tag
 								class="info-tag"
 								color="#2db7f5"
-								@click="handleShowInstanceSelector(instanceInfo)">
+								@click="handleShowInstanceSelector(instanceInfo, record)">
 									选择车组
 							</a-tag>
 							<a-tag
@@ -57,6 +57,8 @@
 						<div v-show="!isReadonly && instanceInfo.selectorVisible">
 							<a-select
 								v-model="instanceInfo.selectedLabelArray"
+								:id="record.modelInfo.modelName + 'selector'"
+								:ref="record.modelInfo.modelName + 'selector'"
 								showArrow
 								mode="multiple"
 								style="width: 100%"
@@ -382,14 +384,20 @@ export default {
 				this.typesData = res.result
 			}
 		},
-		handleUnSelectInstanceItem(instanceInfo, index) {
+		handleUnSelectInstanceItem(instanceInfo, label) {
+			debugger
 			instanceInfo.isSelectedAll = false
-			instanceInfo.items[index].isSelected = false
+			instanceInfo.items.find(item => item.label === label).isSelected = false
 			this.updateInstanceInfoSelectedLabelArray(instanceInfo)
 			this.updateModelValue()
 		},
-		handleShowInstanceSelector(instanceInfo) {
+		handleShowInstanceSelector(instanceInfo, record) {
 			instanceInfo.selectorVisible = !instanceInfo.selectorVisible
+			if (instanceInfo.selectorVisible) {
+				this.$nextTick(() => {
+					this.$refs[record.modelInfo.modelName + 'selector'].focus()
+				})
+			}
 		},
 		handleSelectAllInstanceItems(instanceInfo) {
 			instanceInfo.isSelectedAll = true
@@ -409,7 +417,7 @@ export default {
 		},
 		handleInstanceInfoSelectedLabelArray(arrayData, instanceInfo) {
 			this.updateInstanceInfoItemIsSelected(arrayData, instanceInfo)
-			this.updateModelValue()
+			// this.updateModelValue()
 		},
 		updateInstanceInfoItemIsSelected(arrayData, instanceInfo) {
 			instanceInfo.items.forEach(item => {
@@ -419,6 +427,7 @@ export default {
 		},
 		handleInstanceInfoSelectorHide(instanceInfo) {
 			instanceInfo.selectorVisible = false
+			this.updateModelValue()
 		},
 		// handleSelectUnitItem(unitInfo, index) {
 		// 	unitInfo.items[index].isSelected = !(unitInfo.items[index].isSelected)
