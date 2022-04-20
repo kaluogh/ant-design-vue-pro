@@ -59,7 +59,7 @@ export default {
     data() {
         return {
             title: 'SearchPointByCode',
-            visible: true,
+            visible: false,
             confirmLoading: false,
 			totalData: [],
             treeExpandedKeys: [],
