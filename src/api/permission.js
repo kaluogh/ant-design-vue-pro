@@ -8,8 +8,16 @@ const permissionApi = {
  * GetPermissionByToken
  */
 export function GetUserPermission () {
-  return request({
-    url: permissionApi.GetPermissionByToken,
-    method: 'get'
-  })
+	// return request({
+	// 	url: permissionApi.GetPermissionByToken,
+	// 	method: 'get'
+	// })
+	return Promise.resolve({
+		success: true,
+		result: {
+			allAuth: [{}],
+			auth: [{}],
+			menu: [{}],
+		}
+	})
 }

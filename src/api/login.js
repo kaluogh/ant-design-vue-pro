@@ -27,11 +27,18 @@ const userApi = {
  * @returns {*}
  */
 export function login(parameter) {
-    return request({
-        url: userApi.Login,
-        method: 'post',
-        data: parameter
-    })
+    // return request({
+    //     url: userApi.Login,
+    //     method: 'post',
+    //     data: parameter
+    // })
+
+	return Promise.resolve({
+		success: true,
+		result: {
+			token: 'faker' + new Date().getTime()
+		}
+	})
 }
 
 export function getSmsCaptcha(parameter) {
