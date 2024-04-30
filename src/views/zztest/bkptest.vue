@@ -31,6 +31,8 @@
 		</a-card>
 
 		<search-point-by-code ref="searchPointByCode"/>
+
+		<common-header/>
 	</div>
 </template>
 
